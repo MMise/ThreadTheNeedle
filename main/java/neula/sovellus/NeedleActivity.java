@@ -43,14 +43,13 @@ public class NeedleActivity extends AppCompatActivity {
         needleView = (NeedleView) findViewById(R.id.needle_view);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        mGyro = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         listener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 xList.add(sensorEvent.values[0]);
                 yList.add(sensorEvent.values[1]);
                 zList.add(sensorEvent.values[2]);
-                printValues();
             }
 
             @Override
@@ -61,29 +60,14 @@ public class NeedleActivity extends AppCompatActivity {
         sensorManager.registerListener(listener,mGyro,SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    private void printValues(){
-        if(xList.size() != 0){
-            for(float num : xList) {
-                textViewX.setText(String.valueOf(num));
-                sendValues();
-            }
-        }
-        if(yList.size() != 0){
-            for(float num : yList) {
-                textViewY.setText(String.valueOf(num));
-            }
-        }
-        if(zList.size() != 0){
-            for(float num : zList) {
-                textViewZ.setText(String.valueOf(num));
-            }
-        }
+    public void onStart(){
+        super.onStart();
+        needleView.startThread();
     }
 
-    private void sendValues() {
-        if(xList.size() > 1){
-            needleView.getValues(xList.get(xList.size() - 1));
-        }
+    public void onStop(){
+        super.onStop();
+        needleView.stopThread();
     }
 }
 
