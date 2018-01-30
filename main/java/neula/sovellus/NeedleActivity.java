@@ -10,10 +10,11 @@ import android.os.Bundle;
 
 public class NeedleActivity extends AppCompatActivity {
     SensorEventListener listener;
-    Sensor mGyro;
+    Sensor mSensor;
     SensorManager sensorManager;
 
     NeedleView needleView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +23,7 @@ public class NeedleActivity extends AppCompatActivity {
         needleView = findViewById(R.id.needle_view);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
+        mSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         listener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
@@ -34,7 +35,7 @@ public class NeedleActivity extends AppCompatActivity {
                 //TODO KEK
             }
         };
-        sensorManager.registerListener(listener,mGyro,SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(listener, mSensor,SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     public void onStart(){

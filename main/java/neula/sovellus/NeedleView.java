@@ -3,15 +3,10 @@ package neula.sovellus;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-
-import java.sql.SQLOutput;
 import java.util.Random;
 import android.view.View;
-
-import java.util.ArrayList;
 
 public class NeedleView extends View implements Runnable{
 
@@ -21,8 +16,8 @@ public class NeedleView extends View implements Runnable{
     int canvasW;
     int canvasH;
 
-    Ball palloX = new Ball(100,100,Color.RED);
-    Ball palloY = new Ball(100,100,Color.BLUE);
+    Ball lanka = new Ball(100,100,Color.RED);
+    Ball neula = new Ball(100,100,Color.BLUE);
 
     Thread animationThread = null;
     boolean threadMustBeExecuted = false;
@@ -36,34 +31,36 @@ public class NeedleView extends View implements Runnable{
                                int old_width_of_this_view,
                                int old_height_of_this_view )
     {
-        palloX.move_to_position(250, 150);
-        palloY.move_to_position(250, 500);
+        lanka.move_to_position(150, 250);
+        neula.move_to_position(700, 250);
     }
 
     public NeedleView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public void getValues(float neula, float lanka){
-        System.out.println("Neulan arvo: " + neula);
-        if(lanka > 0.05){
-            if(palloY.ball_center_point_y != 0){
-                palloY.ball_center_point_y -= 10;
+    public void getValues(float y, float x){
+        int xx = (int) (x*0.7),
+            yy = (int) (y*0.7);
+
+        if(x > 0){
+            if(lanka.ball_center_point_x < canvasW){
+                lanka.ball_center_point_x += xx+2;
             }
         }
-        else if(lanka < -0.05){
-            if(palloY.ball_center_point_y != canvasW){
-                palloY.ball_center_point_y += 10;
+        else if(x < 0){
+            if(lanka.ball_center_point_x > 0){
+                lanka.ball_center_point_x += xx-2;
             }
         }
-        if(neula > 0.05){
-            if(palloX.ball_center_point_x !=0){
-                palloX.ball_center_point_x +=10;
+        if(y > 0){
+            if(neula.ball_center_point_y < canvasH){
+                neula.ball_center_point_y += yy+2;
             }
         }
-        else if(neula < -0.05){
-            if(palloX.ball_center_point_x != canvasH){
-                palloX.ball_center_point_x -=10;
+        else if(y < 0){
+            if(neula.ball_center_point_y > 0){
+                neula.ball_center_point_y += yy-2;
             }
         }
         invalidate();
@@ -72,8 +69,8 @@ public class NeedleView extends View implements Runnable{
     protected void onDraw(Canvas canvas) {
         canvasW = canvas.getWidth();
         canvasH = canvas.getHeight();
-        palloX.draw(canvas);
-        palloY.draw(canvas);
+        lanka.draw(canvas);
+        neula.draw(canvas);
     }
 
     public void startThread(){
@@ -101,16 +98,16 @@ public class NeedleView extends View implements Runnable{
         while(threadMustBeExecuted){
 
             ticksSinceStart++;
-            //Arvotaan neulan sijainti
-            randomSeed = generator.nextInt((1300 - 700 + 1) + 700);
-            newPosition = (long) (Math.sin(ticksSinceStart) + (randomSeed/100));
-
-            palloX.move_to_position(palloX.get_ball_center_point_x(), 150 + (int) newPosition);
-
-            //arvotaan langan sijainti
+            //Arvotaan langan sijainti
             randomSeed = generator.nextInt((1800 - 200 + 1) + 200);
             newPosition = (long) (Math.sin(ticksSinceStart) + (randomSeed/100));
-            palloY.move_to_position(250 + (int) newPosition, palloY.get_ball_center_point_y());
+
+            lanka.move_to_position(lanka.get_ball_center_point_x(), 250 + (int) newPosition);
+
+            //arvotaan neulan sijainti
+            randomSeed = generator.nextInt((1300 - 700 + 1) + 700);
+            newPosition = (long) (Math.sin(ticksSinceStart) * (randomSeed/100 - 1301/200));
+            neula.move_to_position(neula.get_ball_center_point_x(), neula.get_ball_center_point_y() + (int) newPosition);
             try{
                 animationThread.sleep(10);
             }catch(InterruptedException ex){
