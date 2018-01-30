@@ -15,7 +15,6 @@ public class NeedleActivity extends AppCompatActivity {
 
     NeedleView needleView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

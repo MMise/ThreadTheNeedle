@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+
+import java.sql.SQLOutput;
 import java.util.Random;
 import android.view.View;
 
@@ -43,24 +45,25 @@ public class NeedleView extends View implements Runnable{
     }
 
     public void getValues(float neula, float lanka){
-        if(lanka > 0){
-            if(palloX.ball_center_point_x != 0){
-                palloX.ball_center_point_x -= 1;
+        System.out.println("Neulan arvo: " + neula);
+        if(lanka > 0.05){
+            if(palloY.ball_center_point_y != 0){
+                palloY.ball_center_point_y -= 10;
             }
         }
-        else if(lanka < 0){
-            if(palloX.ball_center_point_x != canvasW){
-                palloX.ball_center_point_x+= 1;
+        else if(lanka < -0.05){
+            if(palloY.ball_center_point_y != canvasW){
+                palloY.ball_center_point_y += 10;
             }
         }
-        if(neula > 0){
-            if(palloY.ball_center_point_y !=0){
-                palloY.ball_center_point_y -=1;
+        if(neula > 0.05){
+            if(palloX.ball_center_point_x !=0){
+                palloX.ball_center_point_x +=10;
             }
         }
-        else if(neula < 0){
-            if(palloY.ball_center_point_y != canvasH){
-                palloY.ball_center_point_y +=1;
+        else if(neula < -0.05){
+            if(palloX.ball_center_point_x != canvasH){
+                palloX.ball_center_point_x -=10;
             }
         }
         invalidate();
