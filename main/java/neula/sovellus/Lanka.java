@@ -21,13 +21,14 @@ class Lanka
         return startX;
     }
 
+    public void setX(int newX) { startX = newX; }
 
     public int getY()
     {
         return startY;
     }
 
-    public void setY( int newY){
+    public void setY(int newY){
         startY = newY;
     }
 

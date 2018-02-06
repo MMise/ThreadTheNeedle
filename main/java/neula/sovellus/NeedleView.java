@@ -10,13 +10,10 @@ import android.view.View;
 
 public class NeedleView extends View implements Runnable{
 
-    int ballCenterX = 500;
-    int ballCenterY = 700;
-    int ballRadius = 50;
     int canvasW;
     int canvasH;
 
-    Ball lanka = new Ball(100,100,Color.RED);
+    Lanka lanka = new Lanka(200,300);
     Ball neula = new Ball(100,100,Color.BLUE);
 
     Thread animationThread = null;
@@ -31,7 +28,7 @@ public class NeedleView extends View implements Runnable{
                                int old_width_of_this_view,
                                int old_height_of_this_view )
     {
-        lanka.move_to_position(150, 250);
+        lanka.moveToPosition(150, 250);
         neula.move_to_position(700, 250);
     }
 
@@ -42,25 +39,25 @@ public class NeedleView extends View implements Runnable{
     public void getValues(float y, float x){
         int xx = (int) (x*0.7),
             yy = (int) (y*0.7);
-
-        if(x > 0){
-            if(lanka.ball_center_point_x < canvasW){
-                lanka.ball_center_point_x += xx+2;
+        System.out.println(neula.ball_center_point_x);
+        if(xx < 0){
+            if(neula.ball_center_point_x < canvasW){
+                neula.ball_center_point_x += (xx+2);
             }
         }
-        else if(x < 0){
-            if(lanka.ball_center_point_x > 0){
-                lanka.ball_center_point_x += xx-2;
+        else if(xx > 0){
+            if(neula.ball_center_point_x > 0){
+                neula.ball_center_point_x += (xx-2);
             }
         }
-        if(y > 0){
-            if(neula.ball_center_point_y < canvasH){
-                neula.ball_center_point_y += yy+2;
+        if(yy > 0){
+            if(lanka.startY < canvasH){
+                lanka.startY += yy;
             }
         }
-        else if(y < 0){
-            if(neula.ball_center_point_y > 0){
-                neula.ball_center_point_y += yy-2;
+        else if(yy < 0){
+            if(lanka.startY > 0){
+                 lanka.startY += yy;
             }
         }
         invalidate();
@@ -102,7 +99,7 @@ public class NeedleView extends View implements Runnable{
             randomSeed = generator.nextInt((1800 - 200 + 1) + 200);
             newPosition = (long) (Math.sin(ticksSinceStart) + (randomSeed/100));
 
-            lanka.move_to_position(lanka.get_ball_center_point_x(), 250 + (int) newPosition);
+            lanka.moveToPosition(250 + (int) newPosition, lanka.getY() );
 
             //arvotaan neulan sijainti
             randomSeed = generator.nextInt((1300 - 700 + 1) + 700);

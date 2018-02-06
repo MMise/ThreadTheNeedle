@@ -31,7 +31,6 @@ class Ball
         return ball_center_point_y ;
     }
 
-
     public void move_to_position( int new_center_point_x,
                                   int new_center_point_y )
     {

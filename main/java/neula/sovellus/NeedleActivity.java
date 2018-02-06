@@ -27,7 +27,7 @@ public class NeedleActivity extends AppCompatActivity {
         listener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
-                needleView.getValues(sensorEvent.values[0],sensorEvent.values[1]);
+                needleView.getValues(sensorEvent.values[1],sensorEvent.values[0]);
             }
 
             @Override
