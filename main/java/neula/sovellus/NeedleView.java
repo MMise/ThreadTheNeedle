@@ -40,14 +40,14 @@ public class NeedleView extends View implements Runnable{
         int xx = (int) (x*0.7),
             yy = (int) (y*0.7);
         System.out.println(neula.ball_center_point_x);
-        if(xx < 0){
-            if(neula.ball_center_point_x < canvasW){
-                neula.ball_center_point_x += (xx+2);
+        if(xx > 0){
+            if(neula.ball_center_point_x > 0){
+                neula.ball_center_point_x -= xx;
             }
         }
-        else if(xx > 0){
-            if(neula.ball_center_point_x > 0){
-                neula.ball_center_point_x += (xx-2);
+        else if(xx < 0){
+            if(neula.ball_center_point_x < canvasW){
+                neula.ball_center_point_x -= xx;
             }
         }
         if(yy > 0){
