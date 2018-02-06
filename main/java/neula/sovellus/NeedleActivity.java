@@ -1,5 +1,6 @@
 package neula.sovellus;
 
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -7,8 +8,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Window;
 
-public class NeedleActivity extends AppCompatActivity {
+public class NeedleActivity extends Activity {
     SensorEventListener listener;
     Sensor mSensor;
     SensorManager sensorManager;
@@ -19,6 +21,7 @@ public class NeedleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_needle);
         needleView = findViewById(R.id.needle_view);
 

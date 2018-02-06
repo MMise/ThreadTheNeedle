@@ -43,7 +43,7 @@ public class NeedleView extends View implements Runnable{
 
     public void getValues(float y, float x){
         int xx = (int) (x*0.7),
-            yy = (int) (y*0.7);
+                yy = (int) (y*0.7);
 
 
         if(xx > 0){

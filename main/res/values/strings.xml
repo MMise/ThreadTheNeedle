@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">Neula ja Lanka</string>
+    <string name="app_name">THREAD THE NEEDLE</string>
     <string name="text_view_x">textViewX</string>
     <string name="text_view_y">textViewY</string>
     <string name="text_view_z">textViewZ</string>
+    <string name="buttonStart">START</string>
 </resources>
