@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.NoTitle"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/kek">
 
     <Button
         android:id="@+id/button"
@@ -43,4 +43,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.212" />
+
 </android.support.constraint.ConstraintLayout>

@@ -48,22 +48,22 @@ public class NeedleView extends View implements Runnable{
 
         if(xx > 0){
             if(neula.ball_center_point_x > 0){
-                neula.ball_center_point_x -= xx;
+                neula.ball_center_point_x -= xx+3;
             }
         }
         else if(xx < 0){
             if(neula.ball_center_point_x < canvasW){
-                neula.ball_center_point_x -= xx;
+                neula.ball_center_point_x -= xx-3;
             }
         }
         if(yy > 0){
             if(lanka.startY < canvasH){
-                lanka.startY += yy;
+                lanka.startY += yy+3;
             }
         }
         else if(yy < 0){
             if(lanka.startY > 0){
-                lanka.startY += yy;
+                lanka.startY += yy-3;
             }
         }
         invalidate();
