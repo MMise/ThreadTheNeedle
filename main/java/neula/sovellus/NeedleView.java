@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import java.util.Random;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class NeedleView extends View implements Runnable{
 
@@ -14,7 +16,9 @@ public class NeedleView extends View implements Runnable{
     int canvasH;
 
     Lanka lanka = new Lanka(0,0);
-    Ball neula = new Ball(0,0,Color.BLUE);
+    Neula neula;
+
+    TextView gameover; //Teksti, joka näytetään kun peli on ohi. Saadaan activitystä myöhemmin.
 
     Thread animationThread = null;
     boolean threadMustBeExecuted = false;
@@ -39,6 +43,11 @@ public class NeedleView extends View implements Runnable{
 
     public NeedleView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        neula = new Neula(context);
+    }
+
+    public void setGameoverTextView(TextView a) {
+        gameover = a;
     }
 
     public void getValues(float y, float x){
@@ -47,17 +56,17 @@ public class NeedleView extends View implements Runnable{
 
 
         if(xx > 0){
-            if(neula.ball_center_point_x > 0){
-                neula.ball_center_point_x -= xx+3;
+            if(neula.x > 0){
+                neula.x -= xx+3;
             }
         }
         else if(xx < 0){
-            if(neula.ball_center_point_x < canvasW){
-                neula.ball_center_point_x -= xx-3;
+            if(neula.x < canvasW){
+                neula.x -= xx-3;
             }
         }
         if(yy > 0){
-            if(lanka.startY < canvasH){
+            if(lanka.startY < canvasH * 0.9){
                 lanka.startY += yy+3;
             }
         }
@@ -74,11 +83,28 @@ public class NeedleView extends View implements Runnable{
         canvasH = canvas.getHeight();
         if(firstCycle){
             lanka.moveToPosition(canvasW / 2,  (int) (canvasH / 1.5));
-            neula.move_to_position(canvasW / 2, canvasH / 4);
+            neula.moveToPosition(canvasW / 2, canvasH / 4);
             firstCycle = false;
         }else{
-            lanka.draw(canvas);
-            neula.draw(canvas);
+            if(lanka.getY() < neula.getY()) {
+                int[] hitBox = neula.getHitbox();
+
+                if(lanka.getX() > hitBox[0] && lanka.getX() < hitBox[1]) //Lanka on saatu onnistuneesti neulansilmään
+                {
+                    gameover.setText(R.string.victory);
+                    gameover.setTextColor(getResources().getColor(R.color.GREEN));
+                }
+                else //..tai sitten ei
+                {
+                    gameover.setText(R.string.loss);
+                    gameover.setTextColor(getResources().getColor(R.color.RED));
+                }
+                gameover.setVisibility(VISIBLE);
+                setWillNotDraw(true);
+            } else {
+                lanka.draw(canvas);
+                neula.draw(canvas);
+            }
         }
 
     }
@@ -115,7 +141,7 @@ public class NeedleView extends View implements Runnable{
             randomSeed = generator.nextInt((1300 - 700 + 1) + 700);
             newPosition = (long) (Math.sin(ticksSinceStart) * (randomSeed/100));
             //Neulan X-sijainti ei muutu, tärinää lisätään Y-sijainnille. CanvasH / 4 on neulan Y-sijainti aloitushetkellä
-            neula.move_to_position(neula.get_ball_center_point_x(), (canvasH / 4) + (int) newPosition);
+            neula.moveToPosition(neula.getX(), (canvasH / 4) + (int) newPosition);
             try{
                 animationThread.sleep(10);
             }catch(InterruptedException ex){

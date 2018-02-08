@@ -6,9 +6,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
+import android.widget.TextView;
 
 public class NeedleActivity extends Activity {
     SensorEventListener listener;
@@ -23,7 +23,11 @@ public class NeedleActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_needle);
+
+        TextView gameover = (TextView)findViewById(R.id.textViewGameover);
+
         needleView = findViewById(R.id.needle_view);
+        needleView.setGameoverTextView(gameover);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);

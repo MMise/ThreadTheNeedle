@@ -44,6 +44,7 @@ class Lanka
     {
         Paint threadPaint = new Paint();
         threadPaint.setColor(threadColor);
+        threadPaint.setStrokeWidth(2); //Kahden pikselin lanka jotta debugatessa siitä saa selvää
         /*
         langan x-koordinaattien alku- ja loppupäät pysyvät samana, näin saadaan suora viiva.
         startY on tässä se koordinaattipiste, joka muuttuu kun puhelinta kallistetaan.
