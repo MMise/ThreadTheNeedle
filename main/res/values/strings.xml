@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">THREAD THE NEEDLE</string>
-    <string name="text_view_x">textViewX</string>
-    <string name="text_view_y">textViewY</string>
-    <string name="text_view_z">textViewZ</string>
     <string name="buttonStart">START</string>
     <string name="victory">Bravo! You win!</string>
     <string name="loss">Wow! You lose!</string>
+    <string name="buttonGameOverText">Again?</string>
 </resources>

@@ -8,18 +8,21 @@ import android.util.AttributeSet;
 import java.util.Random;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class NeedleView extends View implements Runnable{
 
     int canvasW;
     int canvasH;
+    int points = 0;
+    String parsedString;
 
     Lanka lanka = new Lanka(0,0);
     Neula neula;
 
     TextView gameover; //Teksti, joka näytetään kun peli on ohi. Saadaan activitystä myöhemmin.
-
+    Button gameOverButton;
     Thread animationThread = null;
     boolean threadMustBeExecuted = false;
 
@@ -43,6 +46,10 @@ public class NeedleView extends View implements Runnable{
 
     public void setGameoverTextView(TextView a) {
         gameover = a;
+    }
+
+    public void setGameOverButton(Button btn){
+        gameOverButton = btn;
     }
 
     public void getValues(float y, float x){ //neulan ja langan liikuttaminen sensoriarvoilla
@@ -99,14 +106,19 @@ public class NeedleView extends View implements Runnable{
                     int[] hitBox = neula.getHitbox();
                     if (lanka.getX() > hitBox[0] && lanka.getX() < hitBox[1]) //Lanka on saatu onnistuneesti neulansilmään
                     {
-                        gameover.setText(R.string.victory);
+                        points++;
+                        parsedString = "\n Consecutive wins: " + points;
+                        gameover.setText(R.string.victory/* + parsedString*/);
                         gameover.setTextColor(getResources().getColor(R.color.GREEN));
                     } else //Lanka osui neulaan
                     {
-                        gameover.setText(R.string.loss);
+                        parsedString = "\n Consecutive wins: " + points;
+                        gameover.setText(R.string.loss/* + parsedString*/);
                         gameover.setTextColor(getResources().getColor(R.color.RED));
+                        points = 0;
                     }
                     gameover.setVisibility(VISIBLE);
+                    gameOverButton.setVisibility(VISIBLE);
                     setWillNotDraw(true);
                     return;
                 }
