@@ -33,21 +33,8 @@ public class NeedleView extends View implements Runnable{
     float deadZone = 0.2f;
     float multiplier = 0.7f; //sensoriarvojen vaikutus liikkeeseen
     int constantSpeed = 3; //vakionopeus kallistuksen havaittaessa
-
+    int threadStartX = 0;
     boolean firstCycle = true; //Käytetään neulan ja langan aloitussijainnin asettamiseen ensimmäisellä ohjelman suoritussyklillä
-
-    public void onSizeChanged( int current_width_of_this_view,
-                               int current_height_of_this_view,
-                               int old_width_of_this_view,
-                               int old_height_of_this_view )
-    {
-        /*
-        System.out.println("canvasW: " + canvasW + " CanvasH: " + canvasH);
-        lanka.moveToPosition((canvasW / 2),  canvasH); // lanka piirtyy näytön leveyssuunnassa keskelle
-        neula.move_to_position(canvasW / 2, canvasH / 3);
-        System.out.println("NeulaX: " + neula.ball_center_point_x + " neulaY: " + neula.ball_center_point_y);
-        */
-    }
 
     public NeedleView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -90,8 +77,14 @@ public class NeedleView extends View implements Runnable{
         canvasW = canvas.getWidth();
         canvasH = canvas.getHeight();
         if(firstCycle){
-            lanka.moveToPosition(canvasW / 2,  (int) (canvasH / 1.5));
-            neula.moveToPosition(canvasW / 4, canvasH / 4);
+            //Arvotaan neulan ja langan aloitussijainnit X-akselilla
+            randomSeed = (int) (Math.random() * 10) + 2;
+            System.out.println("Random seed langalle: " + randomSeed);
+            threadStartX = canvasW / randomSeed; //muuttujaa käytetään langan X-aloitussijainnin tallentamiseen. Tärinä stabiloidaan tämän pisteen ympärille
+            System.out.println("Aloitus X langalle: " + threadStartX);
+            lanka.moveToPosition(threadStartX,  (int) (canvasH / 1.5));
+            randomSeed = (int) (Math.random() * 10) + 1;
+            neula.moveToPosition(canvasW / randomSeed, canvasH / 4);
             firstCycle = false;
         }else{
             if(!threadPassed) { //Lanka on neulan takana, kosketus ei aiheuta pelin loppumista
@@ -152,11 +145,11 @@ public class NeedleView extends View implements Runnable{
             //Arvotaan langan sijainti
             randomSeed = generator.nextInt((1800 - 200 + 1) + 200);
             newPosition = (long) (Math.sin(ticksSinceStart) * (randomSeed/100));
-            //Langan Y-sijainti ei muutu, tärinää lisätään X-sijainnille. CanvasW / 2 on langan X-sijainti aloitushetkellä
-            lanka.moveToPosition((canvasW / 2 + (int) newPosition), lanka.getY());
+            //Langan Y-sijainti ei muutu, tärinää lisätään X-sijainnille. Tärinä on stabiloitu aloitussijannin ympärille
+            lanka.moveToPosition((threadStartX + (int) newPosition), lanka.getY());
 
             //arvotaan neulan sijainti
-            randomSeed = generator.nextInt((1300 - 700 + 1) + 700);
+            randomSeed = generator.nextInt((1800 - 200 + 1) + 200);
             newPosition = (long) (Math.sin(ticksSinceStart) * (randomSeed/100));
             //Neulan X-sijainti ei muutu, tärinää lisätään Y-sijainnille. CanvasH / 4 on neulan Y-sijainti aloitushetkellä
             neula.moveToPosition(neula.getX(), (canvasH / 4) + (int) newPosition);
