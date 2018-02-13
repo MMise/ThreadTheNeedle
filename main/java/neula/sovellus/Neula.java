@@ -44,6 +44,10 @@ class Neula
 
     public int getY() { return y; }
 
+    public int getHEdge() { return h - centerY + y; }
+
+    public int[] getEdges() { return new int[] {x - centerX, w - centerX + x}; }
+
     public void draw( Canvas canvas )
     {
         sprite.setBounds(bounds);

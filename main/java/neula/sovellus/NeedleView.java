@@ -22,10 +22,18 @@ public class NeedleView extends View implements Runnable{
 
     Thread animationThread = null;
     boolean threadMustBeExecuted = false;
+
+    //satunnaisgeneraattori
     long ticksSinceStart = 0;
-    int randomSeed = 0;
     Random generator = new Random();
+    int randomSeed = 0;
     long newPosition = 0;
+
+    boolean threadPassed = false; //Onko lanka neulan takana
+    float deadZone = 0.2f;
+    float multiplier = 0.7f; //sensoriarvojen vaikutus liikkeeseen
+    int constantSpeed = 3; //vakionopeus kallistuksen havaittaessa
+
     boolean firstCycle = true; //Käytetään neulan ja langan aloitussijainnin asettamiseen ensimmäisellä ohjelman suoritussyklillä
 
     public void onSizeChanged( int current_width_of_this_view,
@@ -50,29 +58,29 @@ public class NeedleView extends View implements Runnable{
         gameover = a;
     }
 
-    public void getValues(float y, float x){
-        int xx = (int) (x*0.7),
-                yy = (int) (y*0.7);
+    public void getValues(float y, float x){ //neulan ja langan liikuttaminen sensoriarvoilla
+        float xx = x*multiplier,
+                yy = y*multiplier;
 
 
-        if(xx > 0){
+        if(xx > deadZone){
             if(neula.x > 0){
-                neula.x -= xx+3;
+                neula.x -= (int)xx+constantSpeed;
             }
         }
-        else if(xx < 0){
+        else if(xx < -deadZone){
             if(neula.x < canvasW){
-                neula.x -= xx-3;
+                neula.x -= (int)xx-constantSpeed;
             }
         }
-        if(yy > 0){
-            if(lanka.startY < canvasH * 0.9){
-                lanka.startY += yy+3;
+        if(yy > deadZone){
+            if(lanka.startY < canvasH * 0.9){ //estä lankaa karkaamasta ulos näytöltä
+                lanka.startY += (int)yy+constantSpeed;
             }
         }
-        else if(yy < 0){
+        else if(yy < -deadZone){
             if(lanka.startY > 0){
-                lanka.startY += yy-3;
+                lanka.startY += (int)yy-constantSpeed;
             }
         }
         invalidate();
@@ -83,28 +91,38 @@ public class NeedleView extends View implements Runnable{
         canvasH = canvas.getHeight();
         if(firstCycle){
             lanka.moveToPosition(canvasW / 2,  (int) (canvasH / 1.5));
-            neula.moveToPosition(canvasW / 2, canvasH / 4);
+            neula.moveToPosition(canvasW / 4, canvasH / 4);
             firstCycle = false;
         }else{
-            if(lanka.getY() < neula.getY()) {
-                int[] hitBox = neula.getHitbox();
+            if(!threadPassed) { //Lanka on neulan takana, kosketus ei aiheuta pelin loppumista
+                if (lanka.getY() < neula.getY()) {
 
-                if(lanka.getX() > hitBox[0] && lanka.getX() < hitBox[1]) //Lanka on saatu onnistuneesti neulansilmään
-                {
-                    gameover.setText(R.string.victory);
-                    gameover.setTextColor(getResources().getColor(R.color.GREEN));
+                    int[] edges = neula.getEdges();
+                    if(lanka.getX() < edges[0] || lanka.getX() > edges[1]) { //Lanka ei osunut neulaan
+                        threadPassed = true;
+                        return;
+                    }
+
+                    int[] hitBox = neula.getHitbox();
+                    if (lanka.getX() > hitBox[0] && lanka.getX() < hitBox[1]) //Lanka on saatu onnistuneesti neulansilmään
+                    {
+                        gameover.setText(R.string.victory);
+                        gameover.setTextColor(getResources().getColor(R.color.GREEN));
+                    } else //Lanka osui neulaan
+                    {
+                        gameover.setText(R.string.loss);
+                        gameover.setTextColor(getResources().getColor(R.color.RED));
+                    }
+                    gameover.setVisibility(VISIBLE);
+                    setWillNotDraw(true);
+                    return;
                 }
-                else //..tai sitten ei
-                {
-                    gameover.setText(R.string.loss);
-                    gameover.setTextColor(getResources().getColor(R.color.RED));
-                }
-                gameover.setVisibility(VISIBLE);
-                setWillNotDraw(true);
-            } else {
-                lanka.draw(canvas);
-                neula.draw(canvas);
+            } else { //Lankaa voi yrittää neulansilmään uudestaan vasta, kun se on vedetty takaisin neulan takaa
+                if(lanka.getY() > neula.getHEdge())
+                    threadPassed = false;
             }
+            lanka.draw(canvas);
+            neula.draw(canvas);
         }
 
     }
