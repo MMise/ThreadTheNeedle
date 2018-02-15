@@ -11,3 +11,5 @@ Will you succeed in your quest?
 
 8.2.2018 The sprite for the needle now uses indie retro 8-bit graphics, and a gameover screen will reflect your skill in this competitive esports needlethreading game. The current function used to draw the needle requires android version 5.0 or greater.
 -Miqu-el
+
+15.2.2018 The first release ready version of the game is now ready. An application to ESL has been sent so that professional players can compete in this thrilling, adrenaline-fuelled competitive experience. -VV
