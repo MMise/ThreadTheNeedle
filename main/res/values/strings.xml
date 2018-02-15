@@ -4,4 +4,5 @@
     <string name="victory">Bravo! You win!</string>
     <string name="loss">Wow! You lose!</string>
     <string name="buttonGameOverText">Again?</string>
+    <string name="wins">Consecutive wins: </string>
 </resources>

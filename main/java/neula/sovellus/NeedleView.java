@@ -80,10 +80,16 @@ public class NeedleView extends View implements Runnable{
         invalidate();
     }
 
+    public void setWillDraw(){
+        setWillNotDraw(false);
+    }
+
     protected void onDraw(Canvas canvas) {
+        System.out.println("onDraw function");
         canvasW = canvas.getWidth();
         canvasH = canvas.getHeight();
         if(firstCycle){
+            System.out.println("First Cycle!");
             //Arvotaan neulan ja langan aloitussijainnit X-akselilla
             randomSeed = (int) (Math.random() * 10) + 2;
             System.out.println("Random seed langalle: " + randomSeed);
@@ -107,13 +113,15 @@ public class NeedleView extends View implements Runnable{
                     if (lanka.getX() > hitBox[0] && lanka.getX() < hitBox[1]) //Lanka on saatu onnistuneesti neulansilmään
                     {
                         points++;
-                        parsedString = "\n Consecutive wins: " + points;
-                        gameover.setText(R.string.victory/* + parsedString*/);
+                        stopThread();
+                        parsedString = getResources().getString(R.string.victory) + getResources().getString(R.string.wins) + points;
+                        gameover.setText(parsedString);
                         gameover.setTextColor(getResources().getColor(R.color.GREEN));
                     } else //Lanka osui neulaan
                     {
-                        parsedString = "\n Consecutive wins: " + points;
-                        gameover.setText(R.string.loss/* + parsedString*/);
+                        stopThread();
+                        parsedString = getResources().getString(R.string.loss) + getResources().getString(R.string.wins) + points;
+                        gameover.setText(parsedString);
                         gameover.setTextColor(getResources().getColor(R.color.RED));
                         points = 0;
                     }
@@ -129,7 +137,6 @@ public class NeedleView extends View implements Runnable{
             lanka.draw(canvas);
             neula.draw(canvas);
         }
-
     }
 
     public void startThread(){
@@ -152,7 +159,7 @@ public class NeedleView extends View implements Runnable{
     @Override
     public void run() {
         while(threadMustBeExecuted){
-
+            System.out.println("Thread function!");
             ticksSinceStart++;
             //Arvotaan langan sijainti
             randomSeed = generator.nextInt((1800 - 200 + 1) + 200);
